@@ -56,23 +56,23 @@ class YOLOWorldPAFPN(YOLOv8PAFPN):
         Returns:
             nn.Module: The top down layer.
         """
-        block_cfg = copy.deepcopy(self.block_cfg)
+        block_cfg = copy.deepcopy(self.block_cfg)                            # MaxSigmoidCSPLayerWithTwoConv
         block_cfg.update(
             dict(in_channels=make_divisible(
                 (self.in_channels[idx - 1] + self.in_channels[idx]),
                 self.widen_factor),
-                 out_channels=make_divisible(self.out_channels[idx - 1],
-                                             self.widen_factor),
-                 guide_channels=self.guide_channels,
-                 embed_channels=make_round(self.embed_channels[idx - 1],
-                                           self.widen_factor),
-                 num_heads=make_round(self.num_heads[idx - 1],
-                                      self.widen_factor),
-                 num_blocks=make_round(self.num_csp_blocks,
-                                       self.deepen_factor),
+                 out_channels=make_divisible(self.out_channels[idx - 1],     # []
+                                             self.widen_factor),             #
+                 guide_channels=self.guide_channels,                         # 768
+                 embed_channels=make_round(self.embed_channels[idx - 1],     # [128, 256, 256]
+                                           self.widen_factor),               #
+                 num_heads=make_round(self.num_heads[idx - 1],               # [4, 8, 8]
+                                      self.widen_factor),                    #
+                 num_blocks=make_round(self.num_csp_blocks,                  # 3
+                                       self.deepen_factor),                  #
                  add_identity=False,
-                 norm_cfg=self.norm_cfg,
-                 act_cfg=self.act_cfg))
+                 norm_cfg=self.norm_cfg,                                     # BN
+                 act_cfg=self.act_cfg))                                      # SiLU
         return MODELS.build(block_cfg)
 
     def build_bottom_up_layer(self, idx: int) -> nn.Module:
@@ -91,16 +91,16 @@ class YOLOWorldPAFPN(YOLOv8PAFPN):
                 self.widen_factor),
                  out_channels=make_divisible(self.out_channels[idx + 1],
                                              self.widen_factor),
-                 guide_channels=self.guide_channels,
-                 embed_channels=make_round(self.embed_channels[idx + 1],
-                                           self.widen_factor),
-                 num_heads=make_round(self.num_heads[idx + 1],
-                                      self.widen_factor),
-                 num_blocks=make_round(self.num_csp_blocks,
-                                       self.deepen_factor),
+                 guide_channels=self.guide_channels,                      # 768
+                 embed_channels=make_round(self.embed_channels[idx + 1],  # [128, 256, 256]
+                                           self.widen_factor),            #
+                 num_heads=make_round(self.num_heads[idx + 1],            # [4, 8, 8]
+                                      self.widen_factor),                 #
+                 num_blocks=make_round(self.num_csp_blocks,               # 3
+                                       self.deepen_factor),               #
                  add_identity=False,
-                 norm_cfg=self.norm_cfg,
-                 act_cfg=self.act_cfg))
+                 norm_cfg=self.norm_cfg,                                  # BN
+                 act_cfg=self.act_cfg))                                   # SiLU
         return MODELS.build(block_cfg)
 
     def forward(self, img_feats: List[Tensor], txt_feats: Tensor = None) -> tuple:

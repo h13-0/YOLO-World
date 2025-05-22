@@ -35,9 +35,9 @@ model = dict(
             model_name=text_model_name,
             frozen_modules=['all'])),
     neck=dict(type='YOLOWorldPAFPN',
-              guide_channels=text_channels,
-              embed_channels=neck_embed_channels,
-              num_heads=neck_num_heads,
+              guide_channels=text_channels,       # 768
+              embed_channels=neck_embed_channels, # [128, 256, 256]
+              num_heads=neck_num_heads,           # [4, 8, 8]
               block_cfg=dict(type='MaxSigmoidCSPLayerWithTwoConv')),
     bbox_head=dict(type='YOLOWorldHead',
                    head_module=dict(type='YOLOWorldHeadModule',
